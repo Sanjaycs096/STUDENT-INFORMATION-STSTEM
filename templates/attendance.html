@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Attendance</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        *, *:after, *:before {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            background: url('#') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0.75rem;
+            background-color: #05043e;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            width: 80px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 10px 50px 0 rgba(5, 4, 62, .25);
+        }
+
+        li:nth-child(7) {
+            margin-top: 5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #363664;
+        }
+
+        li + li {
+            margin-top: .75rem;
+        }
+
+        a {
+            color: #FFF;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 3rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        a:hover, a:focus, a.active {
+            background-color: #30305a;
+            outline: 0;
+        }
+
+        a i {
+            font-size: 1.5rem;
+            display: block;
+            text-align: center;
+        }
+
+        a span {
+            position: absolute;
+            background-color: #30305a;
+            white-space: nowrap;
+            padding: .5rem 1rem;
+            border-radius: 6px;
+            left: calc(100% + 1rem);
+            transform-origin: left;
+            transform: scale(0);
+            opacity: 0;
+            transition: .15s ease;
+            color: #fff;
+            z-index: 10;
+        }
+
+        a:hover span {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .container {
+            margin-left: 100px;
+            padding: 2rem;
+            max-width: 1380px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #05043e;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            background-color: green;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<ul>
+    <li><a href="/admin.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+    <li><a href="/edit.html"><i class="fas fa-edit"></i><span>Edit</span></a></li>
+    <li><a href="/delete.html"><i class="fas fa-trash"></i><span>Delete</span></a></li>
+    <li><a href="/student_list.html"><i class="fas fa-eye"></i><span>View</span></a></li>
+    <li><a href="/attendance.html" class="active"><i class="fas fa-calendar"></i><span>Attendance</span></a></li>
+    <li><a href="/marks.html"><i class="fas fa-chart-line"></i><span>Scores</span></a></li>
+    <li><a href="/logout.html"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+</ul>
+
+<div class="container">
+    <h2>Mark Attendance</h2>
+    
+    <div class="filters">
+        <div class="filter-group">
+            <label for="date">Date:</label>
+            <input type="date" id="date" required>
+        </div>
+        <div class="filter-group">
+            <label for="department">Department:</label>
+            <select id="department" required>
+                <option value="">-- Select --</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="MECH">MECH</option>
+                <option value="CIVIL">CIVIL</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="semester">Semester:</label>
+            <select id="semester" required>
+                <option value="">-- Select --</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+            </select>
+        </div>
+        <div class="filter-group" style="display: flex; align-items: flex-end;">
+            <button onclick="loadStudents()" class="btn" style="margin: 0; width: 100%;">Load Students</button>
+        </div>
+    </div>
+
+    <form id="attendanceForm" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Register Number</th>
+                    <th>Student Name</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody"></tbody>
+        </table>
+        <button type="submit" class="btn">Submit Attendance</button>
+    </form>
+
+    <p class="success-message" id="successMessage"></p>
+    <p class="error-message" id="errorMessage"></p>
+</div>
+
+<script>
+document.getElementById('date').valueAsDate = new Date();
+
+async function loadStudents() {
+    const date = document.getElementById('date').value;
+    const department = document.getElementById('department').value;
+    const semester = document.getElementById('semester').value;
+    
+    if (!date || !department || !semester) {
+        alert('Please select date, department, and semester');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/attendance.php?action=fetch&department=${department}&semester=${semester}`);
+        const data = await response.json();
+        
+        const tbody = document.getElementById('studentTableBody');
+        tbody.innerHTML = '';
+        
+        if (data.students && data.students.length > 0) {
+            data.students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.register_number}</td>
+                    <td>${student.student_name}</td>
+                    <td><input type="radio" name="attendance_${student.register_number}" value="present" checked></td>
+                    <td><input type="radio" name="attendance_${student.register_number}" value="absent"></td>
+                `;
+                tbody.appendChild(row);
+            });
+            document.getElementById('attendanceForm').style.display = 'block';
+        } else {
+            tbody.innerHTML = '<tr><td colspan="4">No students found</td></tr>';
+        }
+    } catch (error) {
+        document.getElementById('errorMessage').textContent = 'Error loading students: ' + error.message;
+    }
+}
+
+document.getElementById('attendanceForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const date = document.getElementById('date').value;
+    const department = document.getElementById('department').value;
+    const semester = document.getElementById('semester').value;
+    
+    const attendanceData = [];
+    const radios = document.querySelectorAll('input[type="radio"]:checked');
+    
+    radios.forEach(radio => {
+        const regNo = radio.name.replace('attendance_', '');
+        const status = radio.value;
+        attendanceData.push({ register_number: regNo, status: status });
+    });
+    
+    try {
+        const response = await fetch('/attendance.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                date: date,
+                department: department,
+                semester: semester,
+                attendance: attendanceData
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            document.getElementById('successMessage').textContent = 'Attendance marked successfully!';
+            document.getElementById('errorMessage').textContent = '';
+        } else {
+            document.getElementById('errorMessage').textContent = result.message || 'Error marking attendance';
+            document.getElementById('successMessage').textContent = '';
+        }
+    } catch (error) {
+        document.getElementById('errorMessage').textContent = 'Error: ' + error.message;
+        document.getElementById('successMessage').textContent = '';
+    }
+});
+</script>
+</body>
+</html>

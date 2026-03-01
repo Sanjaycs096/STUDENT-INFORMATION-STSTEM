@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Student List</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        *, *:after, *:before {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            background: url('#') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0.75rem;
+            background-color: #05043e;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            width: 80px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 10px 50px 0 rgba(5, 4, 62, .25);
+        }
+
+        li:nth-child(7) {
+            margin-top: 5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #363664;
+        }
+
+        li + li {
+            margin-top: .75rem;
+        }
+
+        a {
+            color: #FFF;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 3rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        a:hover, a:focus, a.active {
+            background-color: #30305a;
+            outline: 0;
+        }
+
+        a i {
+            font-size: 1.5rem;
+            display: block;
+            text-align: center;
+        }
+
+        a span {
+            position: absolute;
+            background-color: #30305a;
+            white-space: nowrap;
+            padding: .5rem 1rem;
+            border-radius: 6px;
+            left: calc(100% + 1rem);
+            transform-origin: left;
+            transform: scale(0);
+            opacity: 0;
+            transition: .15s ease;
+            color: #fff;
+            z-index: 10;
+        }
+
+        a:hover span {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .container {
+            margin-left: 100px;
+            padding: 2rem;
+            max-width: 1380px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #05043e;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .view-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 6px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            width: 110px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .view-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<ul>
+    <li><a href="/admin.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+    <li><a href="/edit.html"><i class="fas fa-edit"></i><span>Edit</span></a></li>
+    <li><a href="/delete.html"><i class="fas fa-trash"></i><span>Delete</span></a></li>
+    <li><a href="/student_list.html" class="active"><i class="fas fa-eye"></i><span>View</span></a></li>
+    <li><a href="/attendance.html"><i class="fas fa-calendar"></i><span>Attendance</span></a></li>
+    <li><a href="/marks.html"><i class="fas fa-chart-line"></i><span>Scores</span></a></li>
+    <li><a href="/logout.html"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+</ul>
+
+<div class="container">
+    <h2>Student List</h2>
+    
+    <table id="studentTable">
+        <thead>
+            <tr>
+                <th>Register Number</th>
+                <th>Student Name</th>
+                <th>Department</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="studentTableBody">
+            <tr>
+                <td colspan="4" style="text-align: center;">Loading...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="error-message" id="errorMessage"></p>
+</div>
+
+<script>
+async function loadStudents() {
+    try {
+        const response = await fetch('/student_list.html?action=fetch');
+        const data = await response.json();
+        
+        const tbody = document.getElementById('studentTableBody');
+        tbody.innerHTML = '';
+        
+        if (data.students && data.students.length > 0) {
+            data.students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.register_number}</td>
+                    <td>${student.student_name}</td>
+                    <td>${student.department}</td>
+                    <td><a href="/view_student.html?register_number=${student.register_number}" class="view-btn">View Details</a></td>
+                `;
+                tbody.appendChild(row);
+            });
+        } else {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No students found</td></tr>';
+        }
+    } catch (error) {
+        document.getElementById('errorMessage').textContent = 'Error loading students: ' + error.message;
+    }
+}
+
+loadStudents();
+</script>
+</body>
+</html>

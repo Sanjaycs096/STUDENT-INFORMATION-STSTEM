@@ -1,0 +1,11 @@
+Flask==3.0.0
+Werkzeug==3.0.1
+python-dotenv==1.0.0
+bcrypt==4.1.2
+reportlab==4.0.7
+# Supabase + compatible httpx (gotrue requires proxy= kwarg from httpx>=0.26)
+supabase==2.9.1
+httpx[http2]==0.27.2
+h2==4.1.0
+# websockets>=13.0 for websockets.asyncio.client, <16 for realtime compatibility
+websockets==15.0.1

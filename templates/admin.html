@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/at-ui-style-icons/css/at-ui-style-icons.min.css">
+    
+    <title>Admin Panel - Add Student & Upload Proof</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        *, *:after, *:before {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            margin: 0;
+            background: url('#') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0.75rem;
+            background-color: #05043e;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 2px;
+            height: 100vh;
+            width: 80px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 10px 50px 0 rgba(5, 4, 62, .25);
+        }
+
+        li:nth-child(7) {
+            margin-top: 5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #363664;
+        }
+
+        li + li {
+            margin-top: .75rem;
+        }
+
+        a {
+            color: #FFF;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 3rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        a:hover, a:focus, a.active {
+            background-color: #30305a;
+            outline: 0;
+        }
+
+        a i {
+            font-size: 1.5rem;
+            display: block;
+            text-align: center;
+        }
+
+        a span {
+            position: absolute;
+            background-color: #30305a;
+            white-space: nowrap;
+            padding: .5rem 1rem;
+            border-radius: 6px;
+            left: calc(100% + 1rem);
+            transform-origin: left;
+            transform: scale(0);
+            opacity: 0;
+            transition: .15s ease;
+            color: #fff;
+            z-index: 10;
+        }
+
+        a:hover span {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .container {
+            margin-left: 100px;
+            padding: 2rem;
+            max-width: 1380px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: none;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn {
+            background-color: green;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 10px;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .row .field {
+            flex: 1;
+            min-width: 200px;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li><a href="/admin.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+    <li><a href="/edit.html"><i class="fas fa-edit"></i><span>Edit</span></a></li>
+    <li><a href="/delete.html"><i class="fas fa-trash"></i><span>Delete</span></a></li>
+    <li><a href="/student_list.html"><i class="fas fa-eye"></i><span>View</span></a></li>
+    <li><a href="/attendance.html"><i class="fas fa-calendar"></i><span>Attendance</span></a></li>
+    <li><a href="/marks.html"><i class="fas fa-chart-line"></i><span>Scores</span></a></li>
+    <li><a href="/logout.html"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+</ul>
+
+<div class="container">
+    <h2>Add Student Details & Upload Proof</h2>
+
+    <form method="post" enctype="multipart/form-data" id="studentForm">
+        <input type="hidden" name="action" value="submit">
+
+        <div class="row">
+            <div class="field">
+                <label>Student Name:</label>
+                <input type="text" name="student_name" required>
+            </div>
+            <div class="field">
+                <label>Register Number:</label>
+                <input type="text" name="register_number" required>
+            </div>
+            <div class="field">
+                <label>Date of Birth:</label>
+                <input type="date" name="dob" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Gender:</label>
+                <select name="gender" required>
+                    <option value="">-- SELECT GENDER --</option>
+                    <option value="Male">MALE</option>
+                    <option value="Female">FEMALE</option>
+                    <option value="Others">OTHERS</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Blood Group:</label>
+                <select name="blood_group" required>
+                    <option value="">-- SELECT BLOOD GROUP --</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Department:</label>
+                <select name="department" required>
+                    <option value="">-- SELECT DEPARTMENT --</option>
+                    <option value="CSE">Computer Science</option>
+                    <option value="ECE">Electronics & Communication</option>
+                    <option value="EEE">Electrical & Electronics</option>
+                    <option value="MECH">Mechanical</option>
+                    <option value="CIVIL">Civil</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Father's Name:</label>
+                <input type="text" name="father_name" required>
+            </div>
+            <div class="field">
+                <label>Mother's Name:</label>
+                <input type="text" name="mother_name" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Student Phone Number:</label>
+                <input type="tel" name="student_phone" pattern="[0-9]{10}" required>
+            </div>
+            <div class="field">
+                <label>Parent Phone Number:</label>
+                <input type="tel" name="parent_phone" pattern="[0-9]{10}" required>
+            </div>
+            <div class="field">
+                <label>Gmail ID:</label>
+                <input type="email" name="gmail_id" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>Address:</label>
+                <input type="text" name="address" required>
+            </div>
+            <div class="field">
+                <label>Aadhar Number:</label>
+                <input type="text" name="aadhar_number">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label>10th Marksheet (PDF):</label>
+                <input type="file" name="tenth_marksheet" accept="application/pdf">
+            </div>
+            <div class="field">
+                <label>12th Marksheet (PDF):</label>
+                <input type="file" name="twelfth_marksheet" accept="application/pdf">
+            </div>
+            <div class="field">
+                <label>Transfer Certificate (PDF):</label>
+                <input type="file" name="transfer_certificate" accept="application/pdf">
+            </div>
+        </div>
+
+        <div style="width: 100%; display: flex; justify-content: center;">
+            <button type="submit" class="btn">Submit</button>
+        </div>
+    </form>
+
+    <p class="success-message" id="successMessage"></p>
+    <p class="error-message" id="errorMessage"></p>
+</div>
+
+<script>
+document.getElementById('studentForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    formData.append('_csrf_token', document.querySelector('meta[name="csrf-token"]').content);
+    
+    try {
+        const response = await fetch('/admin.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            document.getElementById('successMessage').textContent = 'Student added successfully!';
+            document.getElementById('errorMessage').textContent = '';
+            this.reset();
+        } else {
+            const error = await response.text();
+            document.getElementById('errorMessage').textContent = 'Error: ' + error;
+            document.getElementById('successMessage').textContent = '';
+        }
+    } catch (error) {
+        document.getElementById('errorMessage').textContent = 'Error: ' + error.message;
+        document.getElementById('successMessage').textContent = '';
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <style>
+    :root { --primary: 237, 94%, 81%; --background: 266, 16%, 92%; --background-secondary: 256, 12%, 12%; --background-secondary-dark: 256, 10%, 10%; --background-secondary-light: 257, 11%, 16%; --text-primary: 0, 0%, 0%; --white: 0, 0%, 100%; --quite-gray: 0, 0%, 70%; --font-main: "Poppins", sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-main); background-color: hsl(var(--background)); color: hsl(var(--text-primary)); display: flex; }
+    #navbar { position: fixed; top: 0; left: 0; width: 5rem; height: 100vh; background-color: hsl(var(--background-secondary)); transition: width 0.3s ease-in-out; overflow-x: hidden; overflow-y: auto; display: flex; flex-direction: column; justify-content: space-between; }
+    #navbar:hover { width: 16rem; }
+    .navbar-items { list-style: none; padding: 0; }
+    .navbar-logo { height: 5rem; background-color: hsl(var(--background-secondary-dark)); display: flex; justify-content: left; align-items: center; }
+    .navbar-logo svg { height: 2rem; fill: hsl(var(--white)); }
+    .navbar-item-inner ion-icon { min-width: 2rem; color: hsl(var(--quite-gray)); }
+    #navbar:hover .navbar-item-inner ion-icon { color: hsl(var(--white)); }
+    .navbar-item-inner { display: flex; align-items: center; gap: 1rem; color: hsl(var(--quite-gray)); padding: 1rem; text-decoration: none; transition: background 0.3s, color 0.3s; white-space: nowrap; overflow: hidden; }
+    .navbar-item-inner:hover { background-color: hsl(var(--background-secondary-light)); color: hsl(var(--white)); }
+    .link-text { white-space: nowrap; opacity: 0; transition: opacity 0.3s; }
+    #navbar:hover .link-text { opacity: 1; }
+    ion-icon { font-size: 1.5rem; }
+    main#main { margin-left: 5rem; padding: 2rem; width: 100%; transition: margin-left 0.3s ease-in-out; }
+    #navbar:hover ~ main#main { margin-left: 16rem; }
+    .info-container { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
+    .info-box { flex: 1 1 200px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 200px; }
+    .info-box h3 { font-size: 18px; margin-bottom: 10px; color: #555; }
+    .info-item { margin-bottom: 8px; font-size: 14px; }
+    .info-label { font-weight: 600; color: #666; }
+    .info-value { color: #222; }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <ul class="navbar-items">
+      <li class="navbar-logo">
+        <a class="navbar-item-inner">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1438.88 1819.54">
+            <polygon points="925.79 318.48 830.56 0 183.51 1384.12 510.41 1178.46 925.79 318.48"/>
+            <polygon points="1438.88 1663.28 1126.35 948.08 111.98 1586.26 0 1819.54 1020.91 1250.57 1123.78 1471.02 783.64 1663.28 1438.88 1663.28"/>
+          </svg>
+        </a>
+      </li>
+      <li><a class="navbar-item-inner" href="/student_index.html"><ion-icon name="grid-outline"></ion-icon><span class="link-text">Dashboard</span></a></li>
+      <li><a class="navbar-item-inner" href="/student_dashboard.html"><ion-icon name="person-outline"></ion-icon><span class="link-text">Profile</span></a></li>
+      <li><a class="navbar-item-inner" href="/performance.html"><ion-icon name="stats-chart-outline"></ion-icon><span class="link-text">Performance</span></a></li>
+      <li><a class="navbar-item-inner" href="/academic_details.html"><ion-icon name="school-outline"></ion-icon><span class="link-text">Exam Details</span></a></li>
+      <li><a class="navbar-item-inner" href="/change_password.html"><ion-icon name="lock-closed-outline"></ion-icon><span class="link-text">Change Password</span></a></li>
+    </ul>
+    <ul class="navbar-items">
+      <li><a class="navbar-item-inner" href="/logout.html"><ion-icon name="log-out-outline"></ion-icon><span class="link-text">Logout</span></a></li>
+    </ul>
+  </nav>
+  <main id="main">
+    <h2>Exam Details</h2>
+    <div id="content"></div>
+  </main>
+  <script>
+    async function loadAcademicDetails() {
+      try {
+        const response = await fetch('/academic_details.php?action=fetch');
+        const data = await response.json();
+        const contentDiv = document.getElementById('content');
+        
+        if (data.academic) {
+          let html = '<div class="info-container">';
+          for (let i = 1; i <= 8; i++) {
+            const cgpa = data.academic['sem' + i + '_cgpa'] || 'N/A';
+            const backlogs = data.academic['sem' + i + '_backlogs'] || 0;
+            html += `
+              <div class="info-box">
+                <h3>Semester ${i}</h3>
+                <div class="info-item">
+                  <span class="info-label">CGPA: </span>
+                  <span class="info-value">${cgpa}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Backlogs: </span>
+                  <span class="info-value">${backlogs}</span>
+                </div>
+              </div>
+            `;
+          }
+          html += '</div>';
+          contentDiv.innerHTML = html;
+        } else {
+          contentDiv.innerHTML = '<p>No academic details found.</p>';
+        }
+      } catch (error) {
+        document.getElementById('content').innerHTML = '<p class="error">Error loading academic details: ' + error.message + '</p>';
+      }
+    }
+    loadAcademicDetails();
+  </script>
+</body>
+</html>

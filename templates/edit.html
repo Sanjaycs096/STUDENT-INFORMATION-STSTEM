@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Edit Student</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        *, *:after, *:before {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            background: url('#') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0.75rem;
+            background-color: #05043e;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            width: 80px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 10px 50px 0 rgba(5, 4, 62, .25);
+        }
+
+        li:nth-child(7) {
+            margin-top: 5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #363664;
+        }
+
+        li + li {
+            margin-top: .75rem;
+        }
+
+        a {
+            color: #FFF;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 3rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        a:hover, a:focus, a.active {
+            background-color: #30305a;
+            outline: 0;
+        }
+
+        a i {
+            font-size: 1.5rem;
+            display: block;
+            text-align: center;
+        }
+
+        a span {
+            position: absolute;
+            background-color: #30305a;
+            white-space: nowrap;
+            padding: .5rem 1rem;
+            border-radius: 6px;
+            left: calc(100% + 1rem);
+            transform-origin: left;
+            transform: scale(0);
+            opacity: 0;
+            transition: .15s ease;
+            color: #fff;
+            z-index: 10;
+        }
+
+        a:hover span {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .container {
+            margin-left: 100px;
+            padding: 2rem;
+            max-width: 1380px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn {
+            background-color: green;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .field {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+
+<ul>
+    <li><a href="/admin.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+    <li><a href="/edit.html" class="active"><i class="fas fa-edit"></i><span>Edit</span></a></li>
+    <li><a href="/delete.html"><i class="fas fa-trash"></i><span>Delete</span></a></li>
+    <li><a href="/student_list.html"><i class="fas fa-eye"></i><span>View</span></a></li>
+    <li><a href="/attendance.html"><i class="fas fa-calendar"></i><span>Attendance</span></a></li>
+    <li><a href="/marks.html"><i class="fas fa-chart-line"></i><span>Scores</span></a></li>
+    <li><a href="/logout.html"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+</ul>
+
+<div class="container">
+    <h2>Edit Student Details</h2>
+    
+    <form id="selectForm">
+        <label for="regno">Select Register Number:</label>
+        <select name="regno" id="regno" required>
+            <option value="">-- Select --</option>
+        </select>
+    </form>
+
+    <div id="editFormContainer" style="display:none;">
+        <form id="editForm">
+            <div id="fieldsContainer"></div>
+            <button type="submit" class="btn">Update</button>
+        </form>
+    </div>
+
+    <p class="success-message" id="successMessage"></p>
+    <p class="error-message" id="errorMessage"></p>
+</div>
+
+<script>
+async function loadStudents() {
+    try {
+        const response = await fetch('/edit.php?action=fetch');
+        const data = await response.json();
+        const select = document.getElementById('regno');
+        
+        data.students.forEach(student => {
+            const option = document.createElement('option');
+            option.value = student.register_number;
+            option.textContent = student.register_number;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading students:', error);
+    }
+}
+
+document.getElementById('regno').addEventListener('change', async function() {
+    const regNo = this.value;
+    if (!regNo) {
+        document.getElementById('editFormContainer').style.display = 'none';
+        return;
+    }
+    
+    try {
+        const formData = new FormData();
+        formData.append('action', 'fetch');
+        formData.append('register_number', regNo);
+        
+        const response = await fetch('/edit.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const student = await response.json();
+        
+        if (student.error) {
+            document.getElementById('errorMessage').textContent = student.error;
+            return;
+        }
+        
+        const fieldsContainer = document.getElementById('fieldsContainer');
+        fieldsContainer.innerHTML = '<input type="hidden" name="register_number" value="' + student.register_number + '"><div class="row">';
+        
+        const fields = ['student_name', 'dob', 'gender', 'blood_group', 'department', 'father_name', 'mother_name', 'student_phone', 'parent_phone', 'gmail_id', 'address'];
+        
+        fields.forEach(field => {
+            const div = document.createElement('div');
+            div.className = 'field';
+            const label = document.createElement('label');
+            label.textContent = field.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) + ':';
+            div.appendChild(label);
+            
+            if (field === 'address') {
+                const textarea = document.createElement('textarea');
+                textarea.name = field;
+                textarea.value = student[field] || '';
+                textarea.required = true;
+                div.appendChild(textarea);
+            } else {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = field;
+                input.value = student[field] || '';
+                input.required = true;
+                div.appendChild(input);
+            }
+            
+            fieldsContainer.querySelector('.row').appendChild(div);
+        });
+        
+        fieldsContainer.innerHTML += '</div>';
+        document.getElementById('editFormContainer').style.display = 'block';
+        document.getElementById('successMessage').textContent = '';
+        document.getElementById('errorMessage').textContent = '';
+        
+    } catch (error) {
+        document.getElementById('errorMessage').textContent = 'Error loading student: ' + error.message;
+    }
+});
+
+document.getElementById('editForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    formData.append('action', 'update');
+    formData.append('_csrf_token', document.querySelector('meta[name="csrf-token"]').content);
+    
+    try {
+        const response = await fetch('/edit.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            document.getElementById('successMessage').textContent = 'Student record updated successfully!';
+            document.getElementById('errorMessage').textContent = '';
+        } else {
+            const error = await response.text();
+            document.getElementById('errorMessage').textContent = 'Error: ' + error;
+            document.getElementById('successMessage').textContent = '';
+        }
+    } catch (error) {
+        document.getElementById('errorMessage').textContent = 'Error: ' + error.message;
+        document.getElementById('successMessage').textContent = '';
+    }
+});
+
+loadStudents();
+</script>
+</body>
+</html>
