@@ -1,7 +1,12 @@
 <div align="center">
 
-# 🎓 Student Information System
-### M. Kumarasamy College of Engineering
+# 🎓 Student Information System (StudentDB)
+
+A modern, full-stack Student Information System built with Flask and Supabase.
+
+Manage student records, attendance, academic performance, and faculty operations — all through a clean, responsive web interface.
+
+[🚀 Live Demo](#demo) · [📖 Documentation](#api-documentation) · [💻 Repository](#) · [🐛 Report Bug](#) · [✨ Request Feature](#)
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.0-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
@@ -9,88 +14,78 @@
 [![Vercel](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
-<br/>
-
-> A modern, full-stack **Student Information System** built with Flask and Supabase. Manage student records, attendance, academic performance, and faculty operations — all through a clean, responsive web interface.
-
-<br/>
-
-[🚀 Live Demo](#demo) · [⚡ Quick Start](#quick-start) · [📖 Features](#features) · [🏗️ Architecture](#architecture)
-
----
+> **Hero Screenshot**
+> *(Hero screenshot goes here - docs/screenshots/hero.png)*
 
 </div>
 
-## ✨ Features
+---
 
-<table>
-<tr>
-<td width="50%">
+## Table of Contents
 
-### 🎓 Student Portal
-- 📋 **Personal Dashboard** — view & update profile details
-- 📊 **Performance Charts** — CGPA trends across all semesters
-- 📅 **Attendance Tracker** — semester-wise attendance percentage
-- 🔒 **Secure Account** — change password with strength validation
-- 🔔 **Notifications** — real-time alerts for marks & attendance
-- 📄 **PDF Reports** — download full academic report card
-
-</td>
-<td width="50%">
-
-### 👨‍🏫 Faculty Portal
-- ➕ **Add Students** — full registration with document upload
-- ✏️ **Edit Records** — update any student detail instantly
-- 🗑️ **Delete with Verification** — DOB-confirmed safe deletion
-- 📋 **Attendance Management** — mark present/absent by dept & semester
-- 📈 **Marks Entry** — CGPA & backlog entry for each semester
-- 👥 **Student List** — searchable, paginated student directory
-
-</td>
-</tr>
-</table>
-
-### 🔐 Security Features
-- **CSRF Protection** on every form and fetch request
-- **Login Rate Limiting** — 5-attempt lockout per IP
-- **Session Hardening** — HttpOnly, SameSite, 8-hour expiry
-- **Security Headers** — X-Frame-Options, CSP, HSTS, nosniff
-- **Input Sanitisation** — length-limited, stripped on all fields
-- **Password Strength** — enforced minimum strength on change
-- **Supabase RLS** — row-level security policies on all tables
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Demo](#demo)
+- [Screenshots](#screenshots)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [How It Works](#how-it-works)
+- [Installation](#installation)
+- [Prerequisites](#prerequisites)
+- [Environment Variables](#environment-variables)
+- [Running Locally](#running-locally)
+- [Usage](#usage)
+- [API Documentation](#api-documentation)
+- [Testing](#testing)
+- [Security](#security)
+- [Performance](#performance)
+- [Deployment](#deployment)
+- [Roadmap](#roadmap)
+- [Known Limitations](#known-limitations)
+- [Contributing](#contributing)
+- [License](#license)
+- [Author](#author)
+- [Acknowledgements](#acknowledgements)
 
 ---
 
-## 📸 Screenshots
+## Overview
 
-> **TODO:** Add screenshots of the working dashboard here. Recommended views:
-> - Login page
-> - Student Dashboard & Charts
-> - Faculty Marks/Attendance Entry
+The Student Information System (StudentDB) is a comprehensive web-based platform tailored for educational institutions. It solves the problem of decentralized data management by providing a unified portal where students can track their academic progress and attendance, while faculty can seamlessly manage records, grading, and reports. It was built to streamline administrative workflows and empower students with real-time access to their academic standing.
 
----
+## Key Features
 
-## 🏗️ Architecture
+**🎓 Student Portal**
+- **Personal Dashboard:** View & update profile details.
+- **Performance Charts:** Visual CGPA trends across all semesters.
+- **Attendance Tracker:** Semester-wise attendance percentage.
+- **Secure Account:** Change password with strength validation.
+- **Notifications:** Real-time alerts for marks & attendance.
+- **PDF Reports:** Download full academic report cards.
 
-```
-StudentDB/
-├── api/
-│   └── app.py              # Flask application (all routes + security)
-├── db/
-│   ├── supabase.py         # Supabase client singleton
-│   ├── rbac.py             # Role-based access control
-│   ├── activity_logger.py  # Audit logging
-│   ├── notifications.py    # In-app notification system
-│   ├── pdf_generator.py    # PDF report generation
-│   └── schema.sql          # Database schema + RLS policies
-├── templates/              # Jinja2 HTML templates
-├── static/                 # CSS and static assets
-├── app.py                  # Local dev entry point
-├── vercel.json             # Vercel serverless config
-└── requirements.txt        # Python dependencies
-```
+**👨‍🏫 Faculty Portal**
+- **Student Management:** Full registration with document upload, edit and safely delete records.
+- **Attendance Management:** Mark present/absent by department & semester.
+- **Marks Entry:** CGPA & backlog entry for each semester.
+- **Student List:** Searchable, paginated student directory.
 
-```
+## Demo
+
+Live demo is not currently available.
+
+## Screenshots
+
+> **TODO:** Add screenshots to `docs/screenshots/`
+> - `login.png`
+> - `dashboard.png`
+> - `main-feature.png`
+
+## Architecture
+
+The system uses a standard client-server architecture with Flask handling routing, templating, and security, while Supabase provides managed PostgreSQL and Row-Level Security (RLS).
+
+```text
 Browser ──► Flask (api/app.py) ──► Supabase (PostgreSQL)
                 │
                 ├── RBAC + Session Auth
@@ -99,39 +94,61 @@ Browser ──► Flask (api/app.py) ──► Supabase (PostgreSQL)
                 └── Jinja2 Templates
 ```
 
----
+## Tech Stack
 
-## ⚡ Quick Start
+**Frontend:** Vanilla HTML/CSS/JS + Jinja2 templates
+**Backend:** Python 3.10, Flask 3.0, Werkzeug 3.0
+**Database:** Supabase (PostgreSQL)
+**Authentication:** Session-based (Flask sessions + bcrypt)
+**Infrastructure/Hosting:** Vercel (serverless Python)
+**Testing:** `unittest` module
 
-### Prerequisites
-- Python 3.10+
-- A [Supabase](https://supabase.com) project (free tier works)
+## Project Structure
 
-### 1. Clone & Install
+```text
+StudentDB/
+├── api/
+│   └── app.py              # Core Flask application logic
+├── db/                     # Database utilities & schemas
+├── docs/                   # Documentation and API specs
+├── static/                 # Static assets (CSS/JS/Images)
+├── templates/              # Jinja2 HTML views
+├── tests/                  # Unit and integration tests
+├── app.py                  # Local dev entry point
+├── vercel.json             # Vercel serverless deployment config
+└── requirements.txt        # Python dependencies
+```
+
+## How It Works
+
+1. Users authenticate via session-based logins.
+2. Faculty users get RBAC (Role-Based Access Control) permissions to mutate student records.
+3. Students have read-only access (enforced by Supabase RLS and Flask) to their data.
+4. The system securely proxies all database queries to Supabase via `httpx`.
+
+## Installation
 
 ```bash
 git clone https://github.com/your-username/StudentDB.git
 cd StudentDB
 ```
-
-Run the included batch file (Windows) — it installs all dependencies automatically:
-
+For Windows:
 ```bat
 start.bat
 ```
-
-Or install manually:
+For Linux/macOS:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Configure Environment
+## Prerequisites
 
-Copy the example env file and fill in your Supabase credentials:
+- Python 3.10+
+- A [Supabase](https://supabase.com) project (free tier works)
 
-```bash
-cp .env.example .env
-```
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill in:
 
 ```env
 SUPABASE_URL=https://your-project.supabase.co
@@ -140,89 +157,67 @@ SECRET_KEY=your-random-secret-key
 FLASK_ENV=development
 ```
 
-### 3. Set Up Database
-
-Run `db/schema.sql` in your Supabase **SQL Editor** to create all tables and RLS policies.
-
-### 4. Run Locally
+## Running Locally
 
 ```bash
 python app.py
 ```
+Open [http://localhost:5000](http://localhost:5000)
 
-Open [http://localhost:5000](http://localhost:5000) 🎉
-
----
-
-## 🌐 Deploy to Vercel
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel --prod
-```
-
-Add your environment variables in the Vercel project dashboard under **Settings → Environment Variables**.
-
----
-
-## 🔑 Demo Credentials
+## Usage
 
 | Role    | ID / Register No | Password  |
 |---------|-----------------|-----------|
 | Student | `DEMO001`       | `demo001` |
 | Faculty | `admin`         | `123@Admin`|
 
-> ⚠️ **Default student password** is the register number in lowercase (e.g. `cs2023001` → password: `cs2023001`). Students should change it on first login.
+## API Documentation
 
----
+For backend route specs and JSON structures, please refer to:
+[docs/api.md](docs/api.md)
 
-## 🛠️ Tech Stack
+## Testing
 
-| Layer        | Technology                                      |
-|--------------|-------------------------------------------------|
-| **Backend**  | Python 3.10, Flask 3.0, Werkzeug 3.0            |
-| **Database** | Supabase (PostgreSQL) with Row-Level Security   |
-| **Auth**     | Session-based (Flask sessions + bcrypt)         |
-| **HTTP**     | httpx 0.27.2 (HTTP/2 enabled)                  |
-| **PDF**      | ReportLab 4.0                                   |
-| **Hosting**  | Vercel (serverless Python)                      |
-| **Frontend** | Vanilla HTML/CSS/JS + Jinja2 templates          |
-
----
-
-## 📦 Dependencies
-
-```
-Flask==3.0.0
-Werkzeug==3.0.1
-python-dotenv==1.0.0
-bcrypt==4.1.2
-reportlab==4.0.7
-supabase==2.9.1
-httpx[http2]==0.27.2
-h2==4.1.0
-websockets==15.0.1
+Run the testing suite to validate functionality and structure:
+```bash
+python -m unittest tests/test_basic.py
 ```
 
----
+## Security
 
-## 🗄️ Database Schema
+- **CSRF Protection** on every form and fetch request.
+- **Login Rate Limiting** — 5-attempt lockout per IP.
+- **Session Hardening** — HttpOnly, SameSite, 8-hour expiry.
+- **Security Headers** — X-Frame-Options, CSP, HSTS, nosniff.
+- **Input Sanitisation** — length-limited, stripped on all fields.
+- **Password Strength** — enforced minimum strength on change.
+- **Supabase RLS** — row-level security policies on all tables.
 
-| Table        | Purpose                                    |
-|------------- |--------------------------------------------|
-| `students`   | Core student records (name, dept, contact) |
-| `academic`   | CGPA & backlogs per semester (sem1–sem8)   |
-| `attendance` | Attendance % per semester (sem1–sem8)      |
-| `faculty`    | Faculty accounts                           |
-| `activity_logs` | Audit trail for all operations          |
-| `notifications` | In-app notification messages            |
+## Performance
 
----
+Performance benchmarks are not currently verified. Optimization focuses on lightweight rendering via Jinja2 and HTTP/2 usage via `httpx`.
 
-## 🤝 Contributing
+## Deployment
+
+Deploying via Vercel:
+```bash
+npm i -g vercel
+vercel --prod
+```
+Set up Environment Variables in the Vercel Dashboard.
+
+## Roadmap
+
+- Add automated Email recovery system.
+- Implement comprehensive E2E testing with Playwright.
+- Integrate a robust CI/CD pipeline for automated testing and releases.
+
+## Known Limitations
+
+- Real-time features using WebSockets are restricted by Vercel Serverless environment.
+- PDF generation may take longer on free-tier serverless functions.
+
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
@@ -230,14 +225,16 @@ websockets==15.0.1
 4. Push to the branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
----
+## License
 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Author
 
-<div align="center">
+**Sanjay Kumar** (2026)
 
-Made with ❤️ for **M. Kumarasamy College of Engineering**
+## Acknowledgements
 
-*Empowering students through technology and innovation.*
-
-</div>
+- [Flask Framework](https://flask.palletsprojects.com/)
+- [Supabase](https://supabase.com/)
+- [ReportLab](https://www.reportlab.com/)
