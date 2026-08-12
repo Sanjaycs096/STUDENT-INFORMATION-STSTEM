@@ -20,7 +20,7 @@ if __name__ == '__main__':
     print("  Student Information System - Local Development")
     print("=" * 55)
     print()
-    print("  Demo Admin  : ID=admin       | Pass=admin123")
+    print("  Demo Admin  : ID=admin       | Pass=123@Admin")
     print("  Demo Student: Reg=DEMO001    | Pass=demo001")
     print()
     print("  Open: http://localhost:5000")

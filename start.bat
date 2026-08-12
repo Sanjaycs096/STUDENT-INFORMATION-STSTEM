@@ -62,7 +62,7 @@ echo =====================================================
 echo.
 echo   [ADMIN / FACULTY]
 echo     ID       : admin
-echo     Password : admin123
+echo     Password : 123@Admin
 echo.
 echo   [STUDENT]
 echo     Reg No   : DEMO001

@@ -61,6 +61,15 @@
 
 ---
 
+## 📸 Screenshots
+
+> **TODO:** Add screenshots of the working dashboard here. Recommended views:
+> - Login page
+> - Student Dashboard & Charts
+> - Faculty Marks/Attendance Entry
+
+---
+
 ## 🏗️ Architecture
 
 ```
